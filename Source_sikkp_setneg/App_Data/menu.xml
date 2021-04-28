@@ -1,0 +1,294 @@
+<menu>
+  <level name="Administrator">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+    <menu_parent title="Master" url="" title_en="Master">
+      <menu_child subtitle="Tabel" url="" subtitle_en="Table">
+        <menu_child2 subtitle2="Waktu Kerja" url="timecard.aspx" subtitle2_en="Work Schedule">
+          <menu_child3 subtitle3="Waktu Kerja Detail" url="timecard_detail.aspx" subtitle3_en="Work Schedule" />
+        </menu_child2>
+        <menu_child2 subtitle2="Pola Jadwal" url="shift.aspx" subtitle2_en="Shift Group" />
+        <menu_child2 subtitle2="Libur" url="holiday.aspx" subtitle2_en="Holiday" />
+        <menu_child2 subtitle2="Status Absen" url="leave.aspx" subtitle2_en="Leave" />
+        <menu_child2 subtitle2="Parameter Lembur" url="overtime_config.aspx" subtitle2_en="OvertimeConfig" />
+        <menu_child2 subtitle2="Potongan" url="deduction.aspx" subtitle2_en="Deduction" />
+        <menu_child2 subtitle2="Upacara" url="ceremony.aspx" subtitle2_en="ceremony" />
+	    <menu_child2 subtitle2="PTKP" url="ptkp.aspx" subtitle2_en="PTKP" />
+	  </menu_child>
+      <menu_child subtitle="Unit Kerja" url="" subtitle_en="Organization">
+        <menu_child2 subtitle2="Satuan Kerja" url="branch.aspx" subtitle2_en="Department">
+          <menu_child3 subtitle3="Instansi" url="institutions.aspx" subtitle3_en="Instititions" />
+          <menu_child3 subtitle3="Unit" url="unit.aspx" subtitle3_en="Unit" />
+          <menu_child3 subtitle3="Deputi" url="deputy.aspx" subtitle3_en="Deputy" />
+          <menu_child3 subtitle3="Biro" url="office.aspx" subtitle3_en="Office" />
+          <menu_child3 subtitle3="Bagian" url="division.aspx" subtitle3_en="Division" />
+          <menu_child3 subtitle3="Subagian" url="subdivision.aspx" subtitle3_en="Subdivision" />
+        </menu_child2>
+        <menu_child2 subtitle2="Jabatan" url="position.aspx" subtitle2_en="Position" />
+        <menu_child2 subtitle2="Golongan" url="group.aspx" subtitle2_en="Group" />
+        <menu_child2 subtitle2="Grade" url="grade.aspx" subtitle2_en="Grade" />
+        <menu_child2 subtitle2="Eselon" url="eselon.aspx" subtitle2_en="Eselon" />
+        <menu_child2 subtitle2="Status" url="status.aspx" subtitle2_en="Status" />
+      </menu_child>
+      <menu_child subtitle="Pegawai" url="employee.aspx" subtitle_en="Employee" />
+    </menu_parent>
+    <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Kehadiran Manual" url="manual.aspx" subtitle_en="Attendance" />
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Per Hari" url="dayoff.aspx" subtitle2_en="Day Off" />
+        <menu_child2 subtitle2="Per Jam" url="timeoff.aspx" subtitle2_en="Time Off" />
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+      <menu_child subtitle="Lembur" url="notice.aspx" subtitle_en="Overtime" />
+      <menu_child subtitle="Perubahan Pola" url="" subtitle_en="Perubahan Pola">
+        <menu_child2 subtitle2="Kolektif" url="shift_collective.aspx" subtitle2_en="Collective" />
+        <menu_child2 subtitle2="Individual" url="shift_personal.aspx" subtitle2_en="Individual">
+          <menu_child3 subtitle3="Ganti Pola" url="change_shift.aspx" subtitle3_en="Change Shift" />
+        </menu_child2>
+      </menu_child>
+      <menu_child subtitle="Hukuman Disiplin" url="foul.aspx" subtitle_en="Discipline Punishment" />
+	  
+      <menu_child subtitle="Kehadiran Upacara" url="ceremony_manual.aspx" subtitle_en="CeremonyAttendance" />
+	  <menu_child subtitle="Jadwal WFH" url="wfh_schedule.aspx" subtitle_en="wfh schedule" />
+ </menu_parent>
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Harian" url="daily.aspx" subtitle2_en="Daily" />
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+        <menu_child2 subtitle2="Upacara" url="ceremony_daily.aspx" subtitle2_en="CeremonyDaily" />
+		<menu_child2 subtitle2="Rekapitulasi Harian" url="summary_daily.aspx" subtitle2_en="SummaryDaily" />
+	  </menu_child>
+		<menu_child subtitle="Tunjangan" url="allowance.aspx" subtitle_en="Allowance" >
+			<menu_child2 subtitle2="Upload Gaji" url="upload_salary.aspx" subtitle2_en="UploadSalary" />
+			<menu_child2 subtitle2="Status PPH" url="pph_status.aspx" subtitle2_en="PPHStatus" />
+		</menu_child>
+    </menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Hak Akses Menu" url="menu_operator.aspx" subtitle_en="Menu Privileges" />
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+      </menu_child>
+      <menu_child subtitle="Aktivitas Pemakai" url="eventlog.aspx" subtitle_en="Event Log" />
+      <menu_child subtitle="Data Murni" url="rawdata.aspx" subtitle_en="Raw Data" />
+		<menu_child subtitle="Ubah NIP" url="change_empid.aspx" subtitle_en="Change Employee ID" />
+		<menu_child subtitle="Riwayat Pegawai" url="employee_history.aspx" subtitle_en="Employee History" />
+		<menu_child subtitle="Proses Tunjangan Kinerja" url="appraisal_insentive.aspx" subtitle_en="Appraisal Insentive" />
+		<menu_child subtitle="Tutup Periode" url="close_system.aspx" subtitle_en="Close System" />
+		<menu_child subtitle="Lokasi Mesin" url="location.aspx" subtitle_en="Machine Location" />
+		<menu_child subtitle="Konektivitas Mesin" url="connection.aspx" subtitle_en="Machine Connection" />
+	</menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+    <menu_parent title="Konfigurasi" url="config.aspx" title_en="Configuration" />
+  </level>
+  <level name="Operator">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+    <menu_parent title="Master" url="" title_en="Master">
+      <menu_child subtitle="Tabel" url="" subtitle_en="Table">
+        <menu_child2 subtitle2="Waktu Kerja" url="timecard.aspx" subtitle2_en="Work Schedule">
+          <menu_child3 subtitle3="Waktu Kerja Detail" url="timecard_detail.aspx" subtitle3_en="Work Schedule" />
+        </menu_child2>
+        <menu_child2 subtitle2="Pola Jadwal" url="shift.aspx" subtitle2_en="Shift Group" />
+        <menu_child2 subtitle2="Libur" url="holiday.aspx" subtitle2_en="Holiday" />
+        <menu_child2 subtitle2="Status Absen" url="leave.aspx" subtitle2_en="Leave" />
+        <menu_child2 subtitle2="Parameter Lembur" url="overtime_config.aspx" subtitle2_en="OvertimeConfig" />
+      </menu_child>
+      <menu_child subtitle="Unit Kerja" url="" subtitle_en="Organization">
+        <menu_child2 subtitle2="Satuan Kerja" url="branch.aspx" subtitle2_en="Department">
+          <menu_child3 subtitle3="Instansi" url="institutions.aspx" subtitle3_en="Instititions" />
+          <menu_child3 subtitle3="Unit" url="unit.aspx" subtitle3_en="Unit" />
+          <menu_child3 subtitle3="Deputi" url="deputy.aspx" subtitle3_en="Deputy" />
+          <menu_child3 subtitle3="Biro" url="office.aspx" subtitle3_en="Office" />
+          <menu_child3 subtitle3="Bagian" url="division.aspx" subtitle3_en="Division" />
+          <menu_child3 subtitle3="Subagian" url="subdivision.aspx" subtitle3_en="Subdivision" />
+        </menu_child2>
+        <menu_child2 subtitle2="Jabatan" url="position.aspx" subtitle2_en="Position" />
+        <menu_child2 subtitle2="Golongan" url="group.aspx" subtitle2_en="Group" />
+        <menu_child2 subtitle2="Grade" url="grade.aspx" subtitle2_en="Grade" />
+        <menu_child2 subtitle2="Eselon" url="eselon.aspx" subtitle2_en="Eselon" />
+        <menu_child2 subtitle2="Status" url="status.aspx" subtitle2_en="Status" />
+      </menu_child>
+      <menu_child subtitle="Pegawai" url="employee.aspx" subtitle_en="Employee" />
+    </menu_parent>
+    <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Per Hari" url="dayoff.aspx" subtitle2_en="Day Off" />
+        <menu_child2 subtitle2="Per Jam" url="timeoff.aspx" subtitle2_en="Time Off" />
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+      <menu_child subtitle="Lembur" url="notice.aspx" subtitle_en="Overtime" />
+	  <menu_child subtitle="Jadwal WFH" url="wfh_schedule.aspx" subtitle_en="wfh schedule" />
+    </menu_parent>
+
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Harian" url="daily.aspx" subtitle2_en="Daily" />
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+      </menu_child>
+      <menu_child subtitle="Tunjangan" url="allowance.aspx" subtitle_en="Allowance" />
+    </menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+      </menu_child>
+    </menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+  </level>
+  <level name="Validator">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+    <menu_parent title="Master" url="" title_en="Master">
+      <menu_child subtitle="Tabel" url="" subtitle_en="Table">
+        <menu_child2 subtitle2="Waktu Kerja" url="timecard.aspx" subtitle2_en="Work Schedule">
+          <menu_child3 subtitle3="Waktu Kerja Detail" url="timecard_detail.aspx" subtitle3_en="Work Schedule" />
+        </menu_child2>
+        <menu_child2 subtitle2="Pola Jadwal" url="shift.aspx" subtitle2_en="Shift Group" />
+        <menu_child2 subtitle2="Libur" url="holiday.aspx" subtitle2_en="Holiday" />
+        <menu_child2 subtitle2="Status Absen" url="leave.aspx" subtitle2_en="Leave" />
+        <menu_child2 subtitle2="Parameter Lembur" url="overtime_config.aspx" subtitle2_en="OvertimeConfig" />
+        <menu_child2 subtitle2="Potongan" url="deduction.aspx" subtitle2_en="Deduction" />
+      </menu_child>
+      <menu_child subtitle="Unit Kerja" url="" subtitle_en="Organization">
+        <menu_child2 subtitle2="Satuan Kerja" url="branch.aspx" subtitle2_en="Department">
+          <menu_child3 subtitle3="Instansi" url="institutions.aspx" subtitle3_en="Instititions" />
+          <menu_child3 subtitle3="Unit" url="unit.aspx" subtitle3_en="Unit" />
+          <menu_child3 subtitle3="Deputi" url="deputy.aspx" subtitle3_en="Deputy" />
+          <menu_child3 subtitle3="Biro" url="office.aspx" subtitle3_en="Office" />
+          <menu_child3 subtitle3="Bagian" url="division.aspx" subtitle3_en="Division" />
+          <menu_child3 subtitle3="Subagian" url="subdivision.aspx" subtitle3_en="Subdivision" />
+        </menu_child2>
+        <menu_child2 subtitle2="Jabatan" url="position.aspx" subtitle2_en="Position" />
+        <menu_child2 subtitle2="Golongan" url="group.aspx" subtitle2_en="Group" />
+        <menu_child2 subtitle2="Grade" url="grade.aspx" subtitle2_en="Grade" />
+        <menu_child2 subtitle2="Eselon" url="eselon.aspx" subtitle2_en="Eselon" />
+        <menu_child2 subtitle2="Status" url="status.aspx" subtitle2_en="Status" />
+      </menu_child>
+      <menu_child subtitle="Pegawai" url="employee.aspx" subtitle_en="Employee" />
+    </menu_parent>
+    <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Kehadiran Manual" url="manual.aspx" subtitle_en="Attendance" />
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Per Hari" url="dayoff.aspx" subtitle2_en="Day Off" />
+        <menu_child2 subtitle2="Per Jam" url="timeoff.aspx" subtitle2_en="Time Off" />
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+      <menu_child subtitle="Lembur" url="notice.aspx" subtitle_en="Overtime" />
+      <menu_child subtitle="Perubahan Pola" url="" subtitle_en="Perubahan Pola">
+        <menu_child2 subtitle2="Kolektif" url="shift_collective.aspx" subtitle2_en="Collective" />
+        <menu_child2 subtitle2="Individual" url="shift_personal.aspx" subtitle2_en="Individual">
+          <menu_child3 subtitle3="Ganti Pola" url="change_shift.aspx" subtitle3_en="Change Shift" />
+        </menu_child2>
+      </menu_child>
+      <menu_child subtitle="Hukuman Disiplin" url="foul.aspx" subtitle_en="Discipline Punishment" />
+	  <menu_child subtitle="Jadwal WFH" url="wfh_schedule.aspx" subtitle_en="wfh schedule" />
+    </menu_parent>
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Harian" url="daily.aspx" subtitle2_en="Daily" />
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+		  <menu_child2 subtitle2="Upacara" url="ceremony_daily.aspx" subtitle2_en="CeremonyDaily" />
+		  <menu_child2 subtitle2="Rekapitulasi Harian" url="summary_daily.aspx" subtitle2_en="SummaryDaily" />
+	  </menu_child>
+      <menu_child subtitle="Tunjangan" url="allowance.aspx" subtitle_en="Allowance" />
+    </menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+		<menu_child subtitle="Proses Tunjangan Kinerja" url="appraisal_insentive.aspx" subtitle_en="Appraisal Insentive" />
+      </menu_child>
+      <menu_child subtitle="Data Murni" url="rawdata.aspx" subtitle_en="Raw Data" />
+	  <menu_child subtitle="Proses Tunjangan Kinerja" url="appraisal_insentive.aspx" subtitle_en="Appraisal Insentive" />
+	  <menu_child subtitle="Tutup Periode" url="close_system.aspx" subtitle_en="Close System" />
+	</menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+  </level>
+  <level name="User">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+    <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Per Hari" url="dayoff.aspx" subtitle2_en="Day Off" />
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+    </menu_parent>
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+      </menu_child>
+    </menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+      </menu_child>
+    </menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+  </level>
+  <level name="Finance">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+	  <menu_parent title="Master" url="" title_en="Master">
+		  <menu_child subtitle="Tabel" url="" subtitle_en="Table">
+			  <menu_child2 subtitle2="PTKP" url="ptkp.aspx" subtitle2_en="PTKP" />
+		  </menu_child>
+		  <menu_child subtitle="Unit Kerja" url="" subtitle_en="Organization">
+			  <menu_child2 subtitle2="Golongan" url="group.aspx" subtitle2_en="Group" />
+			  <menu_child2 subtitle2="Grade" url="grade.aspx" subtitle2_en="Grade" />
+		  </menu_child>
+		  <menu_child subtitle="Pegawai" url="employee.aspx" subtitle_en="Employee" />
+	  </menu_parent>
+	  <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Per Hari" url="dayoff.aspx" subtitle2_en="Day Off" />
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+      <menu_child subtitle="Lembur" url="notice.aspx" subtitle_en="Overtime" />
+	  <menu_child subtitle="Hukuman Disiplin" url="foul.aspx" subtitle_en="Discipline Punishment" />
+	  <menu_child subtitle="Kehadiran Upacara" url="ceremony_manual.aspx" subtitle_en="CeremonyAttendance" />
+    </menu_parent>
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Harian" url="daily.aspx" subtitle2_en="Daily" />
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+        <menu_child2 subtitle2="Upacara" url="ceremony_daily.aspx" subtitle2_en="CeremonyDaily" />
+      </menu_child>
+		<menu_child subtitle="Tunjangan" url="allowance.aspx" subtitle_en="Allowance" >
+			<menu_child2 subtitle2="Upload Gaji" url="upload_salary.aspx" subtitle2_en="UploadSalary" />
+			<menu_child2 subtitle2="Status PPH" url="pph_status.aspx" subtitle2_en="PPHStatus" />
+		</menu_child>
+	</menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+      </menu_child>
+      <menu_child subtitle="Data Murni" url="rawdata.aspx" subtitle_en="Raw Data" />
+		<menu_child subtitle="Riwayat Pegawai" url="employee_history.aspx" subtitle_en="Employee History" />
+		<menu_child subtitle="Tutup Periode" url="close_system.aspx" subtitle_en="Close System" />
+    </menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+    <menu_parent title="Konfigurasi" url="config.aspx" title_en="Configuration" />
+  </level>
+  <level name="Viewer">
+    <menu_parent title="Home" url="default.aspx" title_en="Home" />
+    <menu_parent title="Transaksi" url="" title_en="Transaction">
+      <menu_child subtitle="Tidak Hadir" url="" subtitle_en="Leave">
+        <menu_child2 subtitle2="Saldo Ijin/Cuti" url="leave_accrual.aspx" subtitle2_en="Leave Accrual" />
+      </menu_child>
+      <menu_child subtitle="Hukuman Disiplin" url="foul.aspx" subtitle_en="Discipline Punishment" />
+    </menu_parent>
+    <menu_parent title="Laporan" url="" title_en="Report">
+      <menu_child subtitle="Kehadiran" url="" subtitle_en="Attendance">
+        <menu_child2 subtitle2="Harian" url="daily.aspx" subtitle2_en="Daily" />
+        <menu_child2 subtitle2="Bulanan" url="Detail.aspx" subtitle2_en="Monthly" />
+        <menu_child2 subtitle2="Tahunan" url="summary.aspx" subtitle2_en="Yearly" />
+      </menu_child>
+    </menu_parent>
+    <menu_parent title="Utility" url="" title_en="Utilities">
+      <menu_child subtitle="Users" url="users.aspx" subtitle_en="Account">
+        <menu_child2 subtitle2="Ganti Password" url="password.aspx" subtitle2_en="Password" />
+      </menu_child>
+		<menu_child subtitle="Data Murni" url="rawdata.aspx" subtitle_en="Raw Data" />
+
+	</menu_parent>
+    <menu_parent title="Download" url="download.aspx" title_en="Download" />
+  </level>
+</menu>

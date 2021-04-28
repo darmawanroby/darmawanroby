@@ -1,0 +1,173 @@
+<%@ Master Language="C#"  CodeFile="MasterPage.master.cs" AutoEventWireup="true" Inherits="rtwin.MasterPage" %>
+<%@ Import Namespace="System.Text" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="mainhead" runat="server">
+    <title>Sistem Informasi Kehadiran Kerja Pegawai Kementerian Sekretariat Negara Republik Indonesia</title>
+    <link href="rekabio.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form id="mainform" enctype="multipart/form-data" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="height:100%">
+        <tr>
+            <td align="left" class="backgroundHdr" style="height: 79px">
+                <img src="images/header_kiri.jpg" alt=""/>
+            </td>
+            <td align="right" class="backgroundHdr" style="height: 79px; width: 355px;">
+                <img src="images/header_kanan.jpg" alt="" />
+            </td>            
+        </tr>
+        <tr>
+            <td colspan="2" class="backgroundMenu" valign="middle" style="width:100%; height: 25px">
+            <div id="leftTitle">
+                <img src="images/menu_kiri.gif" style="vertical-align:middle;" alt=""/>&nbsp;&nbsp;
+                <asp:SiteMapPath ID="smpNavigasi" runat="server" CssClass="SiteMapPath" Visible="False">
+                    <RootNodeStyle forecolor="White" />
+                    <NodeStyle forecolor="White" />
+                </asp:SiteMapPath>
+                <asp:HyperLink ID="homeLink" runat="server" CssClass="SiteMapPath" NavigateUrl="~/Default.aspx" SkinID="SiteMapPath">Home</asp:HyperLink>
+            </div>
+            <div id="rightTitle">
+                <asp:Label ID="lblCabang" runat="server" CssClass="fontTks" SkinID="fontTks" Font-Bold="True">Label</asp:Label>
+                &nbsp;&nbsp;
+			 <asp:label id="lblLang" runat="server" CssClass="fontTks" SkinID="fontTks" Text="<%$ Resources:language %>" Visible="False"></asp:label>
+			  <asp:dropdownlist id="ddlBahasa" runat="server" AutoPostBack="True" OnSelectedIndexChanged="RequestLanguageChange_Click" Visible="False">
+			  <asp:ListItem Value="id-ID">Indonesia</asp:ListItem>
+              <asp:ListItem Value="en-US">English</asp:ListItem>
+            </asp:dropdownlist>  
+            </div>    
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width:100%; height: 100%; vertical-align:top">
+                <div id="show2" runat="server">
+                    <table border="0" width="100%" style="height:100%">
+                        <tr>
+                            <td align="left" valign="top" style="width: 200px;height:1600px; position: absolute; z-index: 1; overflow:auto" class="leftmiddle">                            
+                                <div id="formUser" runat="server">
+                                <table border="0" cellpadding="0" cellspacing="0" style="text-align: center; width: 100%;"
+                                    width="100%" class="lefttop">
+                                    <tr>
+                                        <td align="center" style="width: 100%; height: 30px;" valign="middle">
+                                            <asp:label id="lblUser" CssClass="lblTitle" SkinID="lblTitle" runat="server" >Label</asp:label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" style="width: 100%; height: 31px;" valign="middle">
+                                            <asp:LinkButton ID="linkLevel" runat="server" CausesValidation="False" CssClass="lblTitle" SkinID="lblTitle" Font-Bold="True" Text="<%$ Resources:lblchangeLevel %>" OnClick="linkLevel_Click"></asp:LinkButton><br />
+                                            <br />
+                                            <asp:Button ID="lnkLogout" runat="server" Text="Logout" OnClick="lnkLogout_Click" CausesValidation="False" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                </div>
+                                <asp:XmlDataSource ID="XMLMenuSource" runat="server" DataFile="~/App_Data/menu.xml" XPath="menu/level[@name='Administrator']/menu_parent" ></asp:XmlDataSource>
+                                <asp:TreeView ID="tvMenu" runat="server" DataSourceID="XMLMenuSource" ImageSet="Simple" ExpandDepth="0" EnableTheming="True" width="180px" OnSelectedNodeChanged="tvMenu_Select" NodeIndent="10" OnPreRender="tvMenu_PreRender" >
+                                    <ParentNodeStyle Font-Bold="False" />
+                                    <HoverNodeStyle Font-Underline="False" />
+                                    <SelectedNodeStyle Font-Underline="True" forecolor="Red" HorizontalPadding="0px"
+                                        VerticalPadding="0px" />
+                                    <RootNodeStyle Font-Bold="True" />
+                                    <NodeStyle Font-Names="Verdana" Font-Size="8pt" HorizontalPadding="0px"
+                                        NodeSpacing="0px" VerticalPadding="0px" CssClass="NodeStyle" />
+                                    <DataBindings>
+                                    <asp:TreeNodeBinding TextField="title" DataMember="menu_parent" NavigateUrlField="url"></asp:TreeNodeBinding>
+                                    <asp:TreeNodeBinding TextField="subtitle" DataMember="menu_child" NavigateUrlField="url"></asp:TreeNodeBinding>
+                                    <asp:TreeNodeBinding TextField="subtitle2" DataMember="menu_child2" NavigateUrlField="url"></asp:TreeNodeBinding>
+                                    <asp:TreeNodeBinding TextField="subtitle3" DataMember="menu_child3" NavigateUrlField="url"></asp:TreeNodeBinding>
+                                    </DataBindings>
+                                  </asp:TreeView>
+                                <div id="formLogin" runat="server">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="border_table">
+                                        <tr>
+                                            <td align="center" colspan="3" style="background-color:#dcdcdc; height: 22px" class="toplogin">
+                                                <asp:Label ID="lblHeading" runat="server" Font-Bold="True" Font-Size="Larger" Text="<%$ Resources:login %>" forecolor="White"></asp:Label></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" style="width: 100px; height: 7px">
+                                                <asp:Label ID="lblUserID" runat="server" CssClass="fontR" SkinID="fontR" Font-Bold="True" Font-Size="XX-Small"
+                                                    Text="<%$ Resources:UserId %>"></asp:Label></td>
+                                            <td style="width: 75px; height: 7px">
+                                            </td>
+                                            <td rowspan="5" style="width: 100px">
+                                                <img src="images/kunci.gif" alt="" width="40"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" colspan="2" style="height: 12px">
+                                                <asp:TextBox ID="txtUserID" runat="server" TabIndex="1" width="120px"></asp:TextBox></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" style="width: 100px; height: 10px">
+                                                <asp:Label ID="lblPassword" runat="server" CssClass="fontR" SkinID="fontR" Font-Bold="True" Font-Size="XX-Small"
+                                                    Text="<%$ Resources:Password %>"></asp:Label></td>
+                                            <td style="width: 75px; height: 10px">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" colspan="2" style="height: 10px">
+                                                <asp:TextBox ID="txtPassword" runat="server" TabIndex="2" TextMode="Password" width="120px"></asp:TextBox></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px">
+                                                <asp:LinkButton ID="lnkBtnRegister" runat="server" CausesValidation="False" CssClass="fontR" SkinID="fontR"
+                                                    Visible="False">Register</asp:LinkButton></td>
+                                            <td align="left" style="width: 75px; height:50px; vertical-align:middle">
+                                                <asp:Button ID="btnSignIn" runat="server" TabIndex="3" Text="Sign In" OnClick="btnSignIn_Click" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" colspan="3" style="height: 18px">
+                                                <asp:Label ID="lblResult" runat="server" CssClass="fontR" SkinID="fontR" Font-Bold="True" Font-Size="X-Small"
+                                                    forecolor="Red"></asp:Label></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" colspan="3" style=" background-color:Gray; border-color:Gray; height: 18px" class="bottomlogin"">
+                                            
+                                                <asp:RequiredFieldValidator ID="RequiredFieldValidatorUser" runat="server" ControlToValidate="txtUserID"
+                                                    CssClass="fontR" SkinID="fontR" ErrorMessage="<%$ Resources:Confirm1 %>" Font-Size="X-Small"
+                                                    width="136px" height="16px"></asp:RequiredFieldValidator>
+                                                <br />
+                                                <asp:RequiredFieldValidator ID="RequiredFieldValidatorPass" runat="server" ControlToValidate="txtPassword"
+                                                    CssClass="fontR" SkinID="fontR" ErrorMessage="<%$ Resources:Confirm2%>" Font-Size="X-Small"
+                                                    height="16px" width="136px"></asp:RequiredFieldValidator></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                            <td align="left" class="code" valign="top" style="left: 205px; position: absolute; z-index: 2" >
+                             <div id="scroll" class="code">
+                             <asp:contentplaceholder id="cphWithMenu" runat="server">
+                             <table border="0" cellpadding="0" cellspacing="0" class="border_table" width="100%">
+		                        <tr>
+		                            <td style="width: 100%">
+		                            
+                                    <asp:Label ID="lblMessage" runat="server" Text="message" CssClass="fontR" SkinID="fontR" Visible="False"></asp:Label><br />
+                                        <br />
+                                    <center>
+                                        <br />
+                                        &nbsp;</center>
+                                        &nbsp;</td>
+		                        </tr>
+		                    </table>
+                                     </asp:contentplaceholder>
+                                    
+                                </div>
+                             </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+         </tr>
+        <tr>
+            <td colspan="2" class="backgroundFooter fontTks" style="width:100%; height: 25px; position:fixed; z-index:3;bottom:0">
+               <center>Copyright &copy; 2009 - 2014 Kementerian Sekretariat Negara Republik Indonesia</center> 
+                
+	        </td>
+        </tr>
+    </table>
+
+    </form>
+    
+</body>
+</html>

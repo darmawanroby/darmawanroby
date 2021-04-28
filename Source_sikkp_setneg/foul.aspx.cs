@@ -1,0 +1,910 @@
+///'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+// 1. Identifikasi Program
+//        Nama file     : foul.aspx.cs                             (Pseudo code)
+
+//        File terkait  : foul.aspx                                (Form)
+//                        \App_LocalResources\foul.aspx.id.resx    (Display label bahasa Indonesia)
+//                        \App_LocalResources\foul.aspx.en.resx    (Display label bahasa Inggris)
+//                        \App_Code\azlib.cs                       (Kumpulan fungsi-fungsi)
+//
+//
+//        Deskripsi     : Halaman untuk menampilkan dan mengolah perubahan pola karyawan
+
+//
+// 2. Penulis Program
+
+//        Programer     : Aas Meinardi, Irwan Asminan
+//        Co-Programmer : Bayu Widiaiswara
+//
+// 3. Tanggal update    : 12/09/2009
+//
+// 4. Versi             : 2.0.2
+//
+// 5. Historis revisi
+//        Versi 2.0.1   : Penyempurnaan Filter
+//        Versi 2.0.2   : Implementasi AJAX
+//
+//
+///'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+using System.Configuration;
+using System.Collections;
+using System.Data;
+using System.Web.Caching;
+using System.Web.UI.WebControls;
+using System.Web.UI;
+using System.Diagnostics;
+using System.Web.Security;
+using System;
+using System.Text;
+using Microsoft.VisualBasic;
+using System.Web.UI.HtmlControls;
+using System.Web.SessionState;
+using System.Text.RegularExpressions;
+using System.Web.Profile;
+using System.Collections.Generic;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Specialized;
+using System.Web;
+using System.Data.SqlClient;
+using Udev.MasterPageWithLocalization.Classes;
+
+	namespace rtwin
+	{
+        //fungsi: mengatur visible gridview dan formview
+        //jika parameter bernilai true maka Gridview ditampilkan FormView di hidden, berlaku sebaliknya
+        public partial class foul : BasePage
+		{
+            private void showGridView(Boolean show)
+            {
+                GvPunishment.Visible = show;
+                tableFilter.Visible = show;
+                FvPunishment.Visible = !show;
+                if ((Session["GradeID"].ToString() == "1") || (Session["GradeID"].ToString() == "2") /*|| (Session["GradeID"].ToString() == "3")*/)
+                {
+                    lblTambah.Visible = show;
+                    ImgbtnAdd.Visible = show;
+                }
+                        lblTitleRincianMangkir.Visible = false;
+                        gvMangkir.Visible = false;
+                        lblTitleAkumulasiMangkir.Visible = false;
+                        gvAkumulasiMangkir.Visible = false;
+                }
+
+            //fungsi: Handle Ketika Dropdownlist Biro mengalami perubahan
+            protected void ddlFilterItem3_DataBound_SelectedChange(object sender, EventArgs e)
+            {
+                if (ddlFilterItem3.SelectedValue != "000")
+                {
+                    if (Session["GradeID"].ToString() == "2")
+                    {
+                        dsBagian.FilterExpression = "KODE_BIRO = '0000' OR (KODE_CABANG = '" + Session["CabangID"].ToString() + "' AND KODE_DEPUTI = '" + ddlFilterItem3.SelectedValue + "')";
+                    }
+                    else if (Session["GradeID"].ToString().Substring(0, 1) == "3")
+                    {
+                        dsBagian.SelectCommand = "SELECT KODE_BIRO, NAMA_BIRO FROM q_BIRO";
+                        dsBagian.SelectCommand += " WHERE KODE_BIRO = '0000' OR (KODE_BIRO IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE username='" + Session["UserID"].ToString() + "') AND KODE_DEPUTI = '" + ddlFilterItem3.SelectedValue + "')";
+                    }
+                    else
+                    {
+                        dsBagian.FilterExpression = "KODE_BIRO = '0000' OR KODE_DEPUTI = '" + ddlFilterItem3.SelectedValue + "'";
+                    }
+                }
+                else
+                {
+                    if (Session["GradeID"].ToString() == "2")
+                    {
+                        dsBagian.FilterExpression = "KODE_BIRO = '0000' OR KODE_CABANG = '" + Session["CabangID"].ToString() + "'";
+                    }
+                    else if (Session["GradeID"].ToString().Substring(0, 1) == "3")
+                    {
+                        dsBagian.SelectCommand = "SELECT KODE_BIRO, NAMA_BIRO FROM q_BIRO";
+                        dsBagian.SelectCommand += " WHERE KODE_BIRO = '0000' OR KODE_BIRO IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE username='" + Session["UserID"].ToString() + "')";
+                    }
+                }
+                ddlFilterItem4.DataBind();
+            }
+
+            //fungsi: Filter Gridview
+            private void doFiltering()
+            {
+                try
+                {
+                    string strFilter = "";
+
+                    strFilter += " WHERE (PERIODE_PELANGGARAN = '" + "1/1/" + ddlTahun.SelectedValue + "')";
+
+                    if (txtFilterItem2.Text.Trim() != "")
+                    {
+                        if (isEntryUseNIP())
+                        {
+                            if (strFilter != "")
+                            {
+                                strFilter += " AND (NIP = '" + txtFilterItem2.Text.Replace("'", "''") + "')";
+                            }
+                            else
+                            {
+                                strFilter += " WHERE (NIP = '" + txtFilterItem2.Text.Replace("'", "''") + "')";
+                            }
+                        }
+                        else
+                        {
+                            txtFilterItem2.Text = azlib.FillNull(txtFilterItem2.Text, 10);
+                            if (strFilter != "")
+                            {
+                                strFilter += " AND (PIN = '" + txtFilterItem2.Text.Replace("'", "''") + "')";
+                            }
+                            else
+                            {
+                                strFilter += " WHERE (PIN = '" + txtFilterItem2.Text.Replace("'", "''") + "')";
+                            }
+                        }
+                    }
+
+                    if ((ddlFilterItem3.SelectedValue != "000") && (ddlFilterItem3.SelectedValue != ""))
+                    {
+                        if (strFilter != "")
+                        {
+                            strFilter += " AND (KODE_DEPUTI = '" + ddlFilterItem3.SelectedValue + "')";
+                        }
+                        else
+                        {
+                            strFilter += " WHERE (KODE_DEPUTI = '" + ddlFilterItem3.SelectedValue + "')";
+                        }
+                    }
+
+                    if ((ddlFilterItem4.SelectedValue != "0000") && (ddlFilterItem4.SelectedValue != ""))
+                    {
+                        if (strFilter != "")
+                        {
+                            strFilter += " AND (KODE_BIRO = '" + ddlFilterItem4.SelectedValue + "')";
+                        }
+                        else
+                        {
+                            strFilter += " WHERE (KODE_BIRO = '" + ddlFilterItem4.SelectedValue + "')";
+                        }
+                    }
+
+                    if ((((ddlFilterItem3.SelectedValue == "000") || (ddlFilterItem3.SelectedValue == "")) && ((ddlFilterItem4.SelectedValue == "0000") || (ddlFilterItem4.SelectedValue == "")))) //Operator
+                    {
+                        if ((Session["GradeID"].ToString() == "2"))
+                        {
+                            if (strFilter != "")
+                            {
+                                strFilter += " AND KODE_CABANG='" + Session["CabangID"].ToString() + "'";
+                            }
+                            else
+                            {
+                                strFilter += " WHERE KODE_CABANG='" + Session["CabangID"].ToString() + "'";
+                            }
+                        }
+                        else if ((Session["GradeID"].ToString().Substring(0, 1) == "3"))
+                        {
+                            if (strFilter != "")
+                            {
+                                strFilter += " AND KODE_DEPARTEMEN IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE username='" + Session["UserID"].ToString() + "')";
+                            }
+                            else
+                            {
+                                strFilter += " WHERE KODE_DEPARTEMEN IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE username='" + Session["UserID"].ToString() + "')";
+                            }
+                        }
+                    }
+
+                    if (cbFilterItem5.Checked == true)
+                    {
+                        if (strFilter != "")
+                        {
+                            strFilter += " AND (KODE_POTONGAN_REKOMENDASI = '" + ddlFilterItem5.SelectedValue + "')";
+                        }
+                        else
+                        {
+                            strFilter += " WHERE (KODE_POTONGAN_REKOMENDASI = '" + ddlFilterItem5.SelectedValue + "')";
+                        }
+                    }
+
+                    dsPunishment.SelectCommand += strFilter + " ORDER BY JML_MANGKIR DESC, NIP ASC";
+                }
+                catch (Exception ex)
+                { }
+                        lblTitleRincianMangkir.Visible = false;
+                        gvMangkir.Visible = false;
+                        lblTitleAkumulasiMangkir.Visible = false;
+                        gvAkumulasiMangkir.Visible = false;
+                }
+
+            //fungsi: set Kondisi Awal Komponen Filter
+            private void setFilter()
+            {
+                if (Session["GradeID"].ToString() == "2")
+                {
+                    dsBiro.FilterExpression = "KODE_DEPUTI = '000' OR KODE_CABANG = '" + Session["CabangID"].ToString() + "'";
+                }
+                else if (Session["GradeID"].ToString().Substring(0, 1) == "3")
+                {
+                    dsBiro.SelectCommand = "SELECT KODE_DEPUTI, NAMA_DEPUTI FROM q_DEPUTI";
+                    dsBiro.SelectCommand += " WHERE KODE_DEPUTI = '000' OR KODE_DEPUTI IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE username='" + Session["UserID"].ToString() + "')";
+                }
+                else if ((Session["GradeID"].ToString() == "3a") || (Session["GradeID"].ToString() == "4"))
+                {
+                    if (isEntryUseNIP())
+                    {
+                        txtFilterItem2.Text = Session["NIPID"].ToString();
+                    }
+                    else
+                    {
+                        txtFilterItem2.Text = Session["PINID"].ToString();
+                    }
+                    tableFilter.Visible = false;
+                }
+            }
+
+            //Fungsi: set Kondisi awal komponen sesuai hak akses level
+            private void setComponent()
+            {
+                GvPunishment.Columns[7].Visible = false;
+                GvPunishment.Columns[8].Visible = false;
+                if ((Session["GradeID"].ToString() != "1") && (Session["GradeID"].ToString() != "2") /*&& (Session["GradeID"].ToString() != "3")*/)
+                {
+                    GvPunishment.Columns[9].Visible = false;
+                    GvPunishment.Columns[10].Visible = false;
+                    GvPunishment.Columns[11].Visible = false;
+					lblTambah.Visible = false;
+					ImgbtnAdd.Visible = false;
+               }
+                TemplateField Column0 = (TemplateField)GvPunishment.Columns[0];
+                if (isEntryUseNIP())
+                {
+                    lblPIN.Visible = false;
+                    Column0.HeaderText = "NIP";
+                    Column0.SortExpression = "NIP";
+                    //Column0.DataField = "NIP";
+                }
+                else
+                {
+                    lblNIP.Visible = false;
+                    Column0.HeaderText = "PIN";
+                    Column0.SortExpression = "PIN";
+                    //Column0.DataField = "PIN";
+                }
+                Column0.ItemStyle.ForeColor = System.Drawing.Color.Black;
+            }
+			
+			protected void Page_Load(object sender, EventArgs e)
+			{
+				//jika userid kosong maka akan di link ke halaman awal
+				if (! rtwin.azlib.AksesHalaman(32, Session["UserID"].ToString(), Session["GradeID"].ToString(), Session["MenuID"].ToString()))
+				{
+					Response.Redirect("notauthorized.aspx");
+				}
+
+                hlEdit.Visible = ((Session["GradeID"].ToString() == "1") || (Session["GradeID"].ToString() == "2"));
+
+				//jika halaman bukan postback
+				if (! Page.IsPostBack)
+				{
+                    ListItem li = new ListItem();
+                    li = new ListItem(System.Convert.ToString(DateTime.Now.Year - 1), System.Convert.ToString(DateTime.Now.Year - 1));
+                    ddlTahun.Items.Add(li);
+                    li = new ListItem(DateTime.Now.Year.ToString(), DateTime.Now.Year.ToString());
+                    ddlTahun.Items.Add(li);
+                    ddlTahun.SelectedValue = DateTime.Now.Year.ToString();
+
+                    setFilter();
+                    setComponent();
+                    showGridView(true);
+				}
+
+                doFiltering();
+                doFilteringLookup();
+			}
+
+            //fungsi: Refresh GridView
+            protected void btnRefresh_Click(object sender, EventArgs e)
+            {
+                if (Page.IsValid)
+                {
+                    //update ke grid
+                    GvPunishment.DataBind();
+                }
+            }
+
+            //fungsi: Handle Permintaan Tambah data, Tampilkan FormView
+            protected void lblTambah_Click(object sender, EventArgs e)
+            {
+                if (Page.IsValid)
+                {
+                    FvPunishment.DefaultMode = FormViewMode.Insert;
+                    FvPunishment.ChangeMode(FormViewMode.Insert);
+                    showGridView(false);
+                }
+            }
+
+            //fungsi: Handle Permintaan Tambah data, Tampilkan FormView
+            protected void ImgBtnAdd_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+            {
+                lblTambah_Click(sender, e);
+            }
+
+            protected void GvPunishment_DataBound(object sender, EventArgs e)
+            {
+                GridViewRow rowPager = GvPunishment.BottomPagerRow;
+
+                if (rowPager != null)
+                {
+                    // get your controls from the gridview
+                    TextBox txtHalaman = (TextBox)(rowPager.Cells[0].FindControl("txtHalaman"));
+                    Label lblJumlahHalaman = (Label)(rowPager.Cells[0].FindControl("lblJumlahHalaman"));
+
+                    txtHalaman.Text = (GvPunishment.PageIndex + 1).ToString();
+                    // populate page count
+                    lblJumlahHalaman.Text = GvPunishment.PageCount.ToString();
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            protected void GvPunishment_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
+            {
+                //menambahkan State Row on Hover
+                if (e.Row.RowType == DataControlRowType.DataRow)
+                {
+                    GridView gv = ((GridView)sender);
+
+                    String className = ((e.Row.RowState == DataControlRowState.Alternate) ? gv.AlternatingRowStyle.CssClass : gv.RowStyle.CssClass);
+
+                    e.Row.Attributes.Add("onmouseover", "this.className='datagrid_hovcol';");
+
+                    e.Row.Attributes.Add("onmouseout", "this.className='" + className + "';");
+
+                    //mengatur Enable Button Edit dan Delete sesuai hak akses
+                    //if (Session["GradeID"].ToString() != "1")
+                    //{
+                        ImageButton btnEdit = (ImageButton)e.Row.Cells[9].FindControl("imgEdit");
+                        ImageButton btnDelete = (ImageButton)e.Row.Cells[10].FindControl("imgDelete");
+                        ImageButton btnSisip = (ImageButton)e.Row.Cells[11].FindControl("imgSisip");
+                        Label lblTgl = (Label)e.Row.Cells[7].FindControl("lblCol7Item");
+                        Label lblKodeRekomendasi = (Label)e.Row.Cells[3].FindControl("lblCol3Item");
+
+                        //btnEdit.Enabled = btnEdit.Enabled && (DateTime.Parse(lblTgl.Text) >= DateTime.Parse(Session["tglTutup"].ToString()));
+                        //btnDelete.Enabled = btnEdit.Enabled && (DateTime.Parse(lblTgl.Text) >= DateTime.Parse(Session["tglTutup"].ToString()));
+
+                        btnEdit.Visible = (lblTgl.Text != "");
+                        btnDelete.Visible = (lblTgl.Text != "");
+                        btnSisip.Visible = (lblTgl.Text == "") && (lblKodeRekomendasi.Text != "HD00");
+                    //}
+                }
+            }
+
+            //fungsi: Handle ketika tombol Edit di GridView di tekan
+            protected void GvPunishment_RowEditing(object sender, GridViewEditEventArgs e)
+            {
+                if (Page.IsValid)
+                {
+                    dsPunishment.SelectCommand = "SELECT NIP, PIN, NAMA, JML_MANGKIR, KODE_POTONGAN, KODE_POTONGAN_REKOMENDASI, TGL_AWAL, TGL_AKHIR, TGL_PENETAPAN, DOKUMEN_DISIPLIN FROM q_Pelanggaran";
+                    if (isEntryUseNIP())
+                    {
+                        dsPunishment.SelectCommand += " WHERE NIP = '" + ((LinkButton)GvPunishment.Rows[e.NewEditIndex].Cells[0].FindControl("lnkCol0Item")).Text.ToString() + "' AND TGL_AWAL = '" + DateTime.Parse(((Label)GvPunishment.Rows[e.NewEditIndex].Cells[7].FindControl("lblCol7Item")).Text).ToString("MM/dd/yyyy") + "'";
+                    }
+                    else
+                    {
+                        dsPunishment.SelectCommand += " WHERE PIN = '" + ((LinkButton)GvPunishment.Rows[e.NewEditIndex].Cells[0].FindControl("lnkCol0Item")).Text.ToString() + "' AND TGL_AWAL = '" + DateTime.Parse(((Label)GvPunishment.Rows[e.NewEditIndex].Cells[7].FindControl("lblCol7Item")).Text).ToString("MM/dd/yyyy") + "'";                    
+                    }
+                    e.Cancel = true;
+                    FvPunishment.DefaultMode = FormViewMode.Edit;
+                    FvPunishment.ChangeMode(FormViewMode.Edit);
+                    showGridView(false);
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
+
+            //fungsi: Handle ketika terjadi Perintah pada FormView
+            protected void FvPunishment_ItemCommand(object sender, FormViewCommandEventArgs e)
+            {
+                if (e.CommandName == "Cancel_Edit")
+                {
+                    showGridView(true);
+                }
+                else if (e.CommandName == "Cancel_Insert")
+                {
+                    setInitialComponent();
+                    showGridView(true);
+                }
+            }
+
+            //fungsi: Handle Ketika akan mengupdate data pada database
+            protected void dsPunishmentEdit_Updating(object sender, System.Web.UI.WebControls.SqlDataSourceCommandEventArgs e)
+            {
+                try
+                {
+                    TextBox TGL_AKHIR = (TextBox)FvPunishment.FindControl("txtItem3FormView");
+                    TextBox TGL_PENETAPAN = (TextBox)FvPunishment.FindControl("txtItem5FormView");
+                    e.Command.Parameters["@TGL_AKHIR"].Value = DateTime.Parse(TGL_AKHIR.Text);
+                    e.Command.Parameters["@TGL_PENETAPAN"].Value = DateTime.Parse(TGL_PENETAPAN.Text);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionDetails.Text = lblWrongDate.Text;
+                    e.Cancel = true;
+                }
+            }
+
+            //fungsi: Handle Ketika data pada database telah diupdate
+            protected void dsPunishmentEdit_Updated(object sender, System.Web.UI.WebControls.SqlDataSourceStatusEventArgs e)
+            {
+                //Seleksi apakah terjadi error atau tidak
+                //jika tidak ada record yang ter update maka terjadi error
+                if (e.AffectedRows == 0)
+                {
+                    ExceptionDetails.Text = lblCannotUpdate.Text; //& " (" & e.Exception.Message & ")"
+                    e.ExceptionHandled = true;
+                }
+                else
+                {
+                    //Catat ke Log
+                    rtwin.azlib.AddUserAct(Session["UserID"].ToString(), "2432", e.Command.Parameters["@NIP"].Value.ToString() + "," + e.Command.Parameters["@TGL_AWAL"].Value.ToString(), Application["strCn"].ToString());                    
+                }
+                GvPunishment.DataBind();
+                showGridView(true);
+            }
+
+            //fungsi: Handle Ketika data pada database telah didelete
+            protected void dsPunishment_Deleted(object sender, System.Web.UI.WebControls.SqlDataSourceStatusEventArgs e)
+            {
+                //Seleksi apakah terjadi error atau tidak
+                //jika tidak ada record yang ter delete maka terjadi error
+                if (e.AffectedRows == 0)
+                {
+                    ExceptionDetails.Text = lblCannotUpdate.Text;
+                    e.ExceptionHandled = true;
+                }
+                else
+                {
+                    //Catat ke Log
+                    rtwin.azlib.AddUserAct(Session["UserID"].ToString(), "2433", e.Command.Parameters["@NIP"].Value.ToString() + "," + e.Command.Parameters["@TGL_AWAL"].Value.ToString(), Application["strCn"].ToString());
+                }
+                GvPunishment.DataBind();
+            }
+
+            protected void FvPunishment_DataBound(object sender, EventArgs e)
+            {
+                if (FvPunishment.CurrentMode == FormViewMode.Insert)
+                {
+                    if (isEntryUseNIP())
+                    {
+                        ((Label)FvPunishment.FindControl("lblPIN")).Visible = false;
+                    }
+                    else
+                    {
+                        ((Label)FvPunishment.FindControl("lblNip")).Visible = false;
+                    }
+
+                    if ((ViewState["TglAwal"] != null) && (ViewState["TglAkhir"] != null) && (ViewState["TglPenetapan"] != null))
+                    {
+                        ((TextBox)FvPunishment.FindControl("txtItem2FormView")).Text = ViewState["TglAwal"].ToString();
+                        ((TextBox)FvPunishment.FindControl("txtItem3FormView")).Text = ViewState["TglAkhir"].ToString();
+                        ((TextBox)FvPunishment.FindControl("txtItem5FormView")).Text = ViewState["TglPenetapan"].ToString();
+
+                        ViewState.Remove("TglAwal");
+                        ViewState.Remove("TglAkhir");
+                        ViewState.Remove("TglPenetapan");
+                    }
+                    else
+                    {
+                        ((TextBox)FvPunishment.FindControl("txtItem2FormView")).Text = DateTime.Now.ToShortDateString();
+                        ((TextBox)FvPunishment.FindControl("txtItem3FormView")).Text = DateTime.Now.ToShortDateString();
+                        ((TextBox)FvPunishment.FindControl("txtItem5FormView")).Text = DateTime.Now.ToShortDateString();
+                    }
+
+                    //TIGA
+                    RangeValidator ValTglAdd = (RangeValidator)FvPunishment.FindControl("CompareValTglAdd");
+                    ValTglAdd.MinimumValue = DateTime.Parse(Session["tglTutup"].ToString()).ToShortDateString();                        
+
+                    TextBox txtNip = (TextBox)FvPunishment.FindControl("txtItem0FormView");
+                    //txtNip.Focus();
+
+                    TextBox txtDokumen = (TextBox)FvPunishment.FindControl("txtItem6FormView");
+                    txtDokumen.Focus();
+                    
+                    //if (isEntryUseNIP())
+                    //{
+                    //    ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = Session["NIPID"].ToString();
+                    //}
+                    //else
+                    //{
+                    //    ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = Session["PINID"].ToString();
+                    //}
+                    //((TextBox)FvPunishment.FindControl("txtItem0FormView")).Enabled = false;
+
+                    //DateTime.Parse(((Label)row.Cells[13].FindControl("lblCol13Item")).Text).ToString("MM/dd/yyyy")
+                }
+                else if (FvPunishment.CurrentMode == FormViewMode.Edit)
+                {
+                    if (isEntryUseNIP())
+                    {
+                        ((Label)FvPunishment.FindControl("lblPIN")).Visible = false;
+                        ((Label)FvPunishment.FindControl("lblItem0_FormView")).Visible = false;
+                    }
+                    else
+                    {
+                        ((Label)FvPunishment.FindControl("lblNip")).Visible = false;
+                        ((Label)FvPunishment.FindControl("lblItem0FormView")).Visible = false;
+                    }
+
+                }
+            }
+
+            //fungsi: Handle Ketika akan insert database
+            protected void dsPunishmentEdit_Inserting(object sender, System.Web.UI.WebControls.SqlDataSourceCommandEventArgs e)
+            {
+                try
+                {
+                    ViewState["TglAwal"] = ((TextBox)FvPunishment.FindControl("txtItem2FormView")).Text;
+                    ViewState["TglAkhir"] = ((TextBox)FvPunishment.FindControl("txtItem3FormView")).Text;
+                    ViewState["TglPenetapan"] = ((TextBox)FvPunishment.FindControl("txtItem5FormView")).Text;
+
+                    string sNIP;
+                    if (isEntryUseNIP())
+                    {
+                        sNIP = ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text;
+                    }
+                    else
+                    {
+                        sNIP = azlib.getNIP(((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text, Application["strCn"].ToString());
+                    }
+                    TextBox TGL_AWAL = (TextBox)FvPunishment.FindControl("txtItem2FormView");
+                    TextBox TGL_AKHIR = (TextBox)FvPunishment.FindControl("txtItem3FormView");
+                    TextBox TGL_PENETAPAN = (TextBox)FvPunishment.FindControl("txtItem5FormView");
+                    e.Command.Parameters["@NIP"].Value = sNIP;
+                    e.Command.Parameters["@TGL_AWAL"].Value = DateTime.Parse(TGL_AWAL.Text);
+                    e.Command.Parameters["@TGL_AKHIR"].Value = DateTime.Parse(TGL_AKHIR.Text);
+                    e.Command.Parameters["@TGL_PENETAPAN"].Value = DateTime.Parse(TGL_PENETAPAN.Text);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionDetails.Text = lblWrongDate.Text;
+                    e.Cancel = true;
+                }
+            }
+
+            //fungsi: Handle Ketika data pada database telah ditambahkan
+            protected void dsPunishmentEdit_Inserted(object sender, System.Web.UI.WebControls.SqlDataSourceStatusEventArgs e)
+            {
+                //Seleksi apakah terjadi error atau tidak
+                //jika tidak ada record yang ter insert maka terjadi error
+                if (e.AffectedRows == 0)
+                {
+                    ExceptionDetails.Text = lblCannotUpdate.Text ;//+ " (" + e.Exception.Message + ")";
+                    e.ExceptionHandled = true;
+                    if (!isEntrySambung())
+                    {
+                        setInitialComponent();
+                    }
+                }
+                else
+                {
+                    //Catat ke Log
+                    rtwin.azlib.AddUserAct(Session["UserID"].ToString(), "2431", e.Command.Parameters["@NIP"].Value.ToString() + "," + e.Command.Parameters["@TGL_AWAL"].Value.ToString(), Application["strCn"].ToString());
+                    ExceptionDetails.Text = "Data telah di simpan";
+
+                    GvPunishment.DataBind();
+                    setInitialComponent();
+                }
+
+                //if (!isEntrySambung())
+                //{
+                    showGridView(true);
+                //}
+
+            }
+
+            protected void txtHalaman_TextChanged(object sender, EventArgs e)
+            {
+                GridViewRow rowPager = GvPunishment.BottomPagerRow;
+                TextBox txtHalaman = (TextBox)(rowPager.Cells[0].FindControl("txtHalaman"));
+
+                try
+                {
+                    if (int.Parse(txtHalaman.Text) <= GvPunishment.PageCount + 1 && int.Parse(txtHalaman.Text) > 0)
+                    {
+                        GvPunishment.PageIndex = (int.Parse(txtHalaman.Text)) - 1;
+                        GvPunishment.DataBind();
+                    }
+                }
+                catch (Exception)
+                {
+                    txtHalaman.Text = (GvPunishment.PageIndex + 1).ToString();
+                }
+            }
+
+            //fungsi: set kondisi awal komponen di FormView
+            private void setInitialComponent()
+            {
+                ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = "";
+                ((Label)FvPunishment.FindControl("lblItem1FormView")).Text = "";
+                ((TextBox)FvPunishment.FindControl("txtItem2FormView")).Text = DateTime.Now.ToShortDateString();
+                ((TextBox)FvPunishment.FindControl("txtItem3FormView")).Text = DateTime.Now.ToShortDateString();
+                ((DropDownList)FvPunishment.FindControl("ddlItem4FormView")).SelectedIndex = 0;
+                ((TextBox)FvPunishment.FindControl("txtItem5FormView")).Text = DateTime.Now.ToShortDateString();
+                ((TextBox)FvPunishment.FindControl("txtItem6FormView")).Text = "";
+            }
+
+            //fungsi: Tampilkan Lookup pegawai
+            protected void lnkFilterItem2_Click(object sender, EventArgs e)
+            {
+                Session["Triger"] = "txtFilterItem2";
+                GvLookupPegawai.DataBind();
+                LookupMPE.Show();
+            }
+
+            //fungsi: Tampilkan Lookup pegawai
+            protected void lnkItem0FormView_Click(object sender, EventArgs e)
+            {
+                Session["Triger"] = "txtItem0FormView";
+                GvLookupPegawai.DataBind();
+                LookupMPE.Show();
+            }
+
+            //fungsi: Tampilkan Lookup pegawai
+            protected void txtItem0FormView_TextChanged(object sender, EventArgs e)
+            {
+                TextBox txtNIP = (TextBox)FvPunishment.FindControl("txtItem0FormView");
+                Label lblNama = (Label)FvPunishment.FindControl("lblItem1FormView");
+                setNama(txtNIP, lblNama);
+            }
+
+            //fungsi: Ambil nama dari database berdasarkan NIP, lalu ubah properti Label yg dituju
+            private void setNama(TextBox txtNIP, Label lblNama)
+            {
+                string strSelect;
+                if ((Session["GradeID"].ToString() == "1") || (Session["GradeID"].ToString() == "1a"))
+                {
+                    if (isEntryUseNIP())
+                    {
+                        strSelect = "SELECT NAMA FROM q_Karyawan WHERE NIP='" + txtNIP.Text.Replace("'", "''") + "'";
+                    }
+                    else
+                    {
+                        txtNIP.Text = azlib.FillNull(txtNIP.Text, 10);
+                        strSelect = "SELECT NAMA FROM q_Karyawan WHERE PIN='" + txtNIP.Text.Replace("'", "''") + "'";
+                    }
+                }
+                else
+                {
+                    string strFilter = "";
+                    if (Session["GradeID"].ToString() == "2")
+                    {
+                        strFilter += " AND KODE_CABANG = '" + Session["CabangID"].ToString() + "'";
+                    }
+                    else if (Session["GradeID"].ToString().Substring(0, 1) == "3")
+                    {
+                        strFilter += " AND KODE_DEPARTEMEN IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE USERNAME = '" + Session["UserID"].ToString() + "')";
+                    }
+                    else if (Session["GradeID"].ToString() == "4")
+                    {
+                        strFilter += " AND NIP = '" + Session["NIPID"].ToString() + "'";
+                    }
+                    if (isEntryUseNIP())
+                    {
+                        strSelect = "SELECT NAMA FROM q_Karyawan WHERE NIP='" + txtNIP.Text.Replace("'", "''") + "'" + strFilter;
+                    }
+                    else
+                    {
+                        txtNIP.Text = azlib.FillNull(txtNIP.Text, 10);
+                        strSelect = "SELECT NAMA FROM q_Karyawan WHERE PIN='" + txtNIP.Text.Replace("'", "''") + "'" + strFilter;
+                    }
+                }
+
+                SqlConnection cn = new SqlConnection(Application["strCn"].ToString());
+                SqlDataAdapter adpSQL = new SqlDataAdapter(strSelect, Application["strCn"].ToString());
+                DataSet dsPegawai = new DataSet();
+
+                adpSQL.Fill(dsPegawai);
+                int recordCount = dsPegawai.Tables[0].Rows.Count;
+                if (recordCount > 0)
+                {
+                    lblNama.Text = dsPegawai.Tables[0].Rows[0][0].ToString();
+                }
+                else
+                {
+                    ExceptionDetails.Text = lblIDNotFound.Text;
+                    ExceptionDetails.Visible = true;
+                    txtNIP.Text = "";
+                    lblNama.Text = "";
+                    txtNIP.Focus();
+                }
+                cn.Close();
+            }
+
+            //Lookup Code
+            private void doFilteringLookup()
+            {
+                string strFilter = "";
+
+                if (txtLookupCariPegawai.Text.Trim() != "")
+                {
+                    strFilter = "NAMA LIKE '%" + txtLookupCariPegawai.Text + "%'";
+                }
+                if ((Session["GradeID"].ToString() != "1") && (Session["GradeID"].ToString() != "1a"))
+                {
+                    if (strFilter != "")
+                    {
+                        strFilter += "AND ";
+                    }
+                    if (Session["GradeID"].ToString() == "2")
+                    {
+                        strFilter += "KODE_CABANG = '" + Session["CabangID"].ToString() + "'";
+                    }
+                    else if (Session["GradeID"].ToString().Substring(0, 1) == "3")
+                    {
+                        strFilter += "KODE_DEPARTEMEN IN (SELECT KODE_DEPARTEMEN FROM taOtoritasDepartemen WHERE USERNAME = '" + Session["UserID"].ToString() + "')";
+                    }
+                    else if (Session["GradeID"].ToString() == "4")
+                    {
+                        strFilter += "NIP = '" + Session["NIPID"].ToString() + "'";
+                    }
+                }
+                //dsLookup.FilterExpression = strFilter;
+                dsLookup.SelectCommand = "SELECT NIP, PIN, NAMA FROM taKaryawan";
+                if (strFilter != "")
+                {
+                    dsLookup.SelectCommand += " WHERE " + strFilter;
+                }
+                dsLookup.SelectCommand += " ORDER BY NIP";
+            }
+
+            protected void txtHalamanLookup_TextChanged(object sender, EventArgs e)
+            {
+                GridViewRow rowPager = GvLookupPegawai.BottomPagerRow;
+                TextBox txtHalaman = (TextBox)(rowPager.Cells[0].FindControl("txtHalaman"));
+                try
+                {
+                    if (int.Parse(txtHalaman.Text) <= GvLookupPegawai.PageCount + 1 && int.Parse(txtHalaman.Text) > 0)
+                    {
+                        GvLookupPegawai.PageIndex = (int.Parse(txtHalaman.Text)) - 1;
+                        GvLookupPegawai.DataBind();
+                    }
+                }
+                catch (Exception)
+                {
+                    txtHalaman.Text = (GvLookupPegawai.PageIndex + 1).ToString();
+                }
+            }
+
+            protected void GvLookupPegawai_DataBound(object sender, EventArgs e)
+            {
+                //Data tidak kosong
+                GridViewRow rowPager = GvLookupPegawai.BottomPagerRow;
+
+                //seleksi pager Row apakah ada atau tidak
+                if (rowPager != null)
+                {
+                    //set property control di pager Row
+                    TextBox txtHalaman = (TextBox)(rowPager.Cells[0].FindControl("txtHalaman"));
+                    Label lblJumlahHalaman = (Label)(rowPager.Cells[0].FindControl("lblJumlahHalaman"));
+
+                    txtHalaman.Text = Convert.ToString(GvLookupPegawai.PageIndex + 1);
+                    lblJumlahHalaman.Text = GvLookupPegawai.PageCount.ToString();
+                }
+            }
+
+            private void setInitialLookupState()
+            {
+                txtLookupCariPegawai.Text = "";
+                GvLookupPegawai.PageIndex = 0;
+                GvLookupPegawai.SelectedIndex = -1;
+            }
+
+            protected void imgLookupCancel_Click(object sender, ImageClickEventArgs e)
+            {
+                lnkLookupClose_Click(sender, e);
+            }
+
+            protected void lnkLookupClose_Click(object sender, EventArgs e)
+            {
+                setInitialLookupState();
+                UpdatePanel1.Update();
+            }
+
+            protected void btnLookupCari_Click(object sender, EventArgs e)
+            {
+                GvLookupPegawai.DataBind();
+            }
+
+            protected void GvLookupPegawai_SelectedIndexChanged(object sender, EventArgs e)
+            {
+                if (Session["Triger"] != null)
+                {
+                    if (Session["Triger"].ToString() == "txtFilterItem2")
+                    {
+                        if (isEntryUseNIP())
+                        {
+                            this.txtFilterItem2.Text = ((Label)GvLookupPegawai.SelectedRow.Cells[0].FindControl("Label1")).Text;
+                        }
+                        else
+                        {
+                            this.txtFilterItem2.Text = GvLookupPegawai.SelectedRow.Cells[1].Text;
+                        }
+                    }
+                    else if (Session["Triger"].ToString() == "txtItem0FormView")
+                    {
+                        if (isEntryUseNIP())
+                        {
+                            ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = ((Label)GvLookupPegawai.SelectedRow.Cells[0].FindControl("Label1")).Text;
+                            ((Label)FvPunishment.FindControl("lblItem1FormView")).Text = ((Label)GvLookupPegawai.SelectedRow.Cells[2].FindControl("Label2")).Text;
+                        }
+                        else
+                        {
+                            ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = GvLookupPegawai.SelectedRow.Cells[1].Text;
+                            ((Label)FvPunishment.FindControl("lblItem1FormView")).Text = ((Label)GvLookupPegawai.SelectedRow.Cells[2].FindControl("Label2")).Text;
+                        }
+                    }
+
+                    Session.Remove("Triger");
+                }
+
+                setInitialLookupState();
+                UpdatePanel1.Update();
+            }
+            protected void GvPunishment_RowCommand(object sender, GridViewCommandEventArgs e)
+            {
+                if (e.CommandName == "Show")
+                {
+                    if (Page.IsValid)
+                    {
+                        GridViewRow row = (GridViewRow)((LinkButton)e.CommandSource).NamingContainer;
+                        GvPunishment.SelectedIndex = row.RowIndex;
+                        GvPunishment.DataBind();
+                        string sTahun;
+                        if (ddlTahun.Text == DateTime.Now.Year.ToString())
+                        {
+                            sTahun = azlib.FirstDate(DateTime.Now, "en").ToString();
+                        }
+                        else
+                        {
+                            sTahun = "'1/1/" + Convert.ToString(Convert.ToInt32(ddlTahun.Text)+1) + "'";
+                        }
+                        dsMangkir.SelectCommand = "select TGL_MASUK from q_AbsenHarianDetil where MANGKIR = 1 AND PIN = '" + ((LinkButton)row.Cells[0].FindControl("lnkCol0Item")).Text + "' AND TGL_MASUK >= '1/1/" + ddlTahun.Text + "' AND TGL_MASUK < '" + sTahun + "'";
+                        dsMangkir.DataBind();
+                        lblTitleRincianMangkir.Text = "Rincian ketidakhadiran PIN " + ((LinkButton)row.Cells[0].FindControl("lnkCol0Item")).Text;
+                        lblTitleRincianMangkir.Visible = true;
+                        gvMangkir.Visible = true;
+
+                        dsAkumulasiMangkir.SelectCommand = "SELECT [JML_JAM_LAMBAT_CPTPLG],[KONVERSI_MANGKIR] FROM [q_LambatCepatPulang]where PIN = '" + ((LinkButton)row.Cells[0].FindControl("lnkCol0Item")).Text + "' AND TAHUN = " + ddlTahun.Text + "";
+                        dsAkumulasiMangkir.DataBind();
+                        if (gvAkumulasiMangkir.Rows.Count > 0)
+                        {
+                            lblTitleAkumulasiMangkir.Text = "Akumulasi Keterlambatan dan Cepat Pulang PIN " + ((LinkButton)row.Cells[0].FindControl("lnkCol0Item")).Text;
+                            lblTitleAkumulasiMangkir.Visible = true;
+                            gvAkumulasiMangkir.Visible = true;
+                        }
+                    }
+                }
+                else if (e.CommandName == "TambahPelanggaran")
+                {
+                    FvPunishment.DefaultMode = FormViewMode.Insert;
+                    FvPunishment.ChangeMode(FormViewMode.Insert);
+                    showGridView(false);
+
+                    ImageButton b = (ImageButton)e.CommandSource;
+                    GridViewRow myRow = (GridViewRow)b.NamingContainer;
+
+                    ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Text = GvPunishment.DataKeys[myRow.RowIndex].Value.ToString();
+                    ((TextBox)FvPunishment.FindControl("txtItem0FormView")).Enabled = false;
+                    TextBox txtNIP = (TextBox)FvPunishment.FindControl("txtItem0FormView");
+                    Label lblNama = (Label)FvPunishment.FindControl("lblItem1FormView");
+                    setNama(txtNIP, lblNama);
+                    ((LinkButton)FvPunishment.FindControl("lnkItem0FormView")).Visible = false;
+                    ((TextBox)FvPunishment.FindControl("txtItem2FormView")).Text = (azlib.FirstDate(DateTime.Now, "id")).ToShortDateString();
+                    int iLamaPotongan;
+                    iLamaPotongan = Convert.ToInt32(((Label)(myRow.Cells[8].FindControl("lblCol11Item"))).Text.ToString());
+                    ((TextBox)FvPunishment.FindControl("txtItem3FormView")).Text = (azlib.FirstDate(DateTime.Now, "id")).AddMonths(iLamaPotongan).AddDays(-1).ToShortDateString();
+                    ((DropDownList)FvPunishment.FindControl("ddlItem4FormView")).SelectedValue = ((Label)(myRow.Cells[3].FindControl("lblCol3Item"))).Text.ToString();
+                }
+            }
+}
+	}
