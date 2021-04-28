@@ -1,0 +1,46 @@
+﻿<%--
+Default skin template. The following skins are provided as examples only.
+
+1. Named control skin. The SkinId should be uniquely defined because
+   duplicate SkinId's per control type are not allowed in the same theme.
+
+<asp:GridView runat="server" SkinId="gridviewSkin" BackColor="White" >
+   <AlternatingRowStyle BackColor="Blue" />
+</asp:GridView>
+
+2. Default skin. The SkinId is not defined. Only one default 
+   control skin per control type is allowed in the same theme.
+
+<asp:Image runat="server" ImageUrl="~/images/image1.jpg" />
+--%>
+<asp:TextBox runat="server" CssClass="text" />
+<asp:Button runat="server" CssClass="button" />
+<asp:GridView runat="server" CssClass="GridView" BorderStyle="None" BorderWidth="1" CellPadding="2" >
+            <HeaderStyle CssClass="HeaderStyle" />
+            <RowStyle CssClass="RowStyle" />
+            <AlternatingRowStyle CssClass="AlternatingRowStyle" />
+            <SelectedRowStyle CssClass="SelectedRowStyle" />
+            <EditRowStyle CssClass="EditRowStyle" />
+            <FooterStyle CssClass="FooterStyle" />
+            <PagerStyle CssClass="PagerStyle" />
+            <EmptyDataRowStyle CssClass="EmptyDataRowStyle" />
+</asp:GridView>
+<asp:FormView runat="server" >
+    <EmptyDataRowStyle CssClass="EmptyDataRowStyle" />
+</asp:FormView>
+<asp:RadioButton runat="server" CssClass="lblStandar" />
+<asp:LinkButton runat="server" CssClass="link" />
+<asp:HyperLink runat="server" CssClass="link" />
+<asp:HyperLink SkinID="SiteMapPath" runat="server" CssClass="SiteMapPath" />
+<asp:CheckBox runat="server" CssClass="checkbox" />
+<asp:Label runat="server" CssClass="lblStandar" />
+<asp:Label SkinID="fontTks" runat="server" CssClass="fontTks" />
+<asp:Label SkinID="lblTitle" runat="server" CssClass="lblTitle" />
+<asp:Label SkinID="fontR" runat="server" CssClass="fontR" />
+<asp:Label SkinID="lblMessage" runat="server" CssClass="lblMessage" />
+<asp:DropDownList runat="server" CssClass="combobox" />
+<asp:RequiredFieldValidator SkinID="fontR" runat="server" CssClass="fontR" />
+<asp:RangeValidator SkinID="fontR" runat="server" CssClass="fontR" />
+<asp:CompareValidator SkinID="fontR" runat="server" CssClass="fontR" />
+<asp:ValidationSummary SkinID="fontR" runat="server" CssClass="fontR" />
+

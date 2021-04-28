@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+	<siteMapNode url="default.aspx" title="Home"  description="Home" >
+		<siteMapNode title="Master" description="Master" resourceKey="Master">
+			<siteMapNode title="Tabel" resourceKey="Tabel">
+				<siteMapNode url="timecard.aspx" title="Waktu Kerja" resourceKey="WorkSchedule">
+					<siteMapNode url="timecard_detail.aspx" title="Waktu Kerja Detail" resourceKey="WorkScheduleDetail"/>
+				</siteMapNode>
+				<siteMapNode url="shift.aspx" title="Pola Jadwal" resourceKey="ShiftGroup"/>
+				<siteMapNode url="holiday.aspx" title="Libur" resourceKey="Holiday"/>
+				<siteMapNode url="leave.aspx" title="Status Absen" resourceKey="Leave"/>
+				<siteMapNode url="deduction.aspx" title="Potongan" resourceKey="Deduction"/>
+				<siteMapNode url="overtime_config.aspx" title="Parameter Lembur" resourceKey="overtimeconfig"/>
+				<siteMapNode url="ceremony.aspx" title="Upacara" resourceKey="ceremony"/>
+			</siteMapNode>
+			<siteMapNode title="Unit Kerja" resourceKey="Organization">
+				<siteMapNode url="branch.aspx" title="Satuan Kerja" resourceKey="branch">
+					<siteMapNode url="institutions.aspx" title="Instansi" resourceKey="institutions"/>
+					<siteMapNode url="unit.aspx" title="Unit" resourceKey="unit"/>
+					<siteMapNode url="deputy.aspx"  title="Deputi" resourceKey="deputy"/>
+					<siteMapNode url="office.aspx" title="Biro" resourceKey="office"/>
+					<siteMapNode url="division.aspx" title="Bagian" resourceKey="division"/>
+					<siteMapNode url="subdivision.aspx" title="SubBgian" resourceKey="subdivision"/>
+				</siteMapNode>
+				<siteMapNode url="position.aspx" title="Jabatan" resourceKey="position"/>
+				<siteMapNode url="group.aspx" title="Golongan" resourceKey="group"/>
+				<siteMapNode url="grade.aspx" title="Grade" resourceKey="grade"/>
+				<siteMapNode url="echelon.aspx" title="Eselon" resourceKey="echelon"/>
+				<siteMapNode url="status.aspx" title="Status" resourceKey="status"/>
+			</siteMapNode>
+			<siteMapNode url="employee.aspx" title="Pegawai" resourceKey="Employee" />
+		</siteMapNode>
+
+		<siteMapNode title="Transaksi"  description="Transaksi" resourceKey="Transaction">
+			<siteMapNode url="manual.aspx" title ="Kehadiran Manual" resourceKey="Attendance" />
+			<siteMapNode title ="Tidak Hadir" resourceKey="Leave">
+				<siteMapNode url="dayoff.aspx" title ="Per Hari" resourceKey="dayoff"/>
+				<siteMapNode url="timeoff.aspx" title ="Per Jam" resourceKey="timeoff"/>
+				<siteMapNode url="leave_accrual.aspx" title="Saldo Cuti / Ijin" resourceKey="leaveaccrual" />
+			</siteMapNode>
+			<siteMapNode url="notice.aspx" title ="Lembur" resourceKey="notice"/>
+			<siteMapNode title ="Perubahan Pola" resourceKey="shift">
+				<siteMapNode url="shift_collective.aspx" title ="Kolektif" resourceKey="Kolektif"/>
+				<siteMapNode url="shift_personal.aspx" title ="Individual" resourceKey="Individual">
+					<siteMapNode url="change_shift.aspx" title="Ganti Pola" resourceKey="Utilities"/>
+				</siteMapNode>
+			</siteMapNode>
+			<siteMapNode url="punishment.aspx" title ="Hukuman Disiplin" resourceKey="disciplinepunishment"/>
+			<siteMapNode url="ceremony_manual.aspx" title ="Kehadiran Upacara" resourceKey="CeremonyAttendance" />
+		</siteMapNode>
+
+		<siteMapNode title="Laporan" description="Laporan" resourceKey="Report" >
+			<siteMapNode title="Kehadiran" description="attendace" resourceKey="attendace" >
+				<siteMapNode url="daily.aspx" title="Harian" resourceKey="Daily">
+					<siteMapNode url="daily_report.aspx" title="Laporan Harian" resourceKey="daily_report"/>
+				</siteMapNode>
+				<siteMapNode url="detail.aspx" title="Bulanan" resourceKey="Detail">
+					<siteMapNode url="detail_report.aspx" title="Laporan Bulanan" resourceKey="detail_report"/>
+				</siteMapNode>
+				<siteMapNode url="summary.aspx" title="Tahunan" resourceKey="Summary">
+					<siteMapNode url="summary_report.aspx" title=" LaporanTahunan" resourceKey="summary_report"/>
+				</siteMapNode>
+				<siteMapNode url="ceremony_daily.aspx" title="Upacara" resourceKey="CeremonyDaily">
+				</siteMapNode>
+			</siteMapNode>
+			<siteMapNode url="allowance.aspx" title="Tunjangan" resourceKey="allowance">
+				<siteMapNode url="allowance_report.aspx" title="Laporan Tunjangan" resourceKey="allowance_report"/>
+			</siteMapNode>
+		</siteMapNode>
+
+		<siteMapNode title="Utility" resourceKey="Utilities">
+			<siteMapNode url="menu_operator.aspx" title ="Hak Akses Menu" resourceKey="MenuPrivileges" />
+			<siteMapNode url="users.aspx" title ="Users" resourceKey="users">
+				<siteMapNode url="grant_department.aspx" title ="Hak Akses" resourceKey="grant_department" />
+				<siteMapNode url="password.aspx" title ="Password" resourceKey="password" />
+			</siteMapNode>
+			<siteMapNode url="eventlog.aspx" title="Aktivitas Pemakai" resourceKey="EventLog"/>
+			<siteMapNode url="rawdata.aspx" title="Data Murni" resourceKey="RawData"/>
+			<siteMapNode url="change_empid.aspx" title="Ubah NIP" resourceKey="Change Employee ID"/>
+			<siteMapNode url="employee_history.aspx" title="Riwayat Pegawai" resourceKey="Employee History"/>
+			<siteMapNode url="appraisal_insentive.aspx" title="Proses Tunjangan Kinerja" resourceKey="Appraisal Insentive"/>
+			<siteMapNode url="location.aspx" title="Lokasi Mesin" resourceKey="Machine Location"/>
+			<siteMapNode url="connection.aspx" title="Konektivitas Mesin" resourceKey="Machine Connection"/>
+		</siteMapNode>
+
+		<siteMapNode url="download.aspx" title="Download" resourceKey="Download">
+			<siteMapNode url="upload_download.aspx" title="Upload Download" resourceKey="UploadDownload"/>
+		</siteMapNode>
+		<siteMapNode url="config.aspx" title="Konfigurasi" resourceKey="Configuration"/>
+		<siteMapNode url="level.aspx" title="Level Akses" resourceKey="level"/>
+		<siteMapNode url="alert.aspx" title="Status Data" resourceKey="Alert"/>
+	</siteMapNode>
+</siteMap>
